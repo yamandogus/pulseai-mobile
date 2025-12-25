@@ -1,79 +1,79 @@
-import { useState } from "react";
-import { View, Text, TouchableOpacity } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
-import HomeScreen from "./screens/home/HomeScreen";
-import TaskListScreen from "./screens/task/TaskListScreen";
-import ProfileScreen from "./screens/profile/ProfileScreen";
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import { NavigationContainer } from '@react-navigation/native';
+import HomeScreen from './screens/home/HomeScreen';
+import TaskListScreen from './screens/task/TaskListScreen';
+import InsightsScreen from './screens/insights/InsightsScreen';
+import NotificationsScreen from './screens/notifications/NotificationsScreen';
+import ProfileScreen from './screens/profile/ProfileScreen';
+import { Ionicons } from '@expo/vector-icons';
 
-type TabType = "Home" | "Tasks" | "Profile";
+const Tab = createBottomTabNavigator();
 
 export default function App() {
-  const [activeTab, setActiveTab] = useState<TabType>("Home");
-
-  const renderScreen = () => {
-    switch (activeTab) {
-      case "Home":
-        return <HomeScreen />;
-      case "Tasks":
-        return <TaskListScreen />;
-      case "Profile":
-        return <ProfileScreen />;
-      default:
-        return <HomeScreen />;
-    }
-  };
-
   return (
-    <SafeAreaView className="flex-1 bg-white">
-      <View className="flex-1">
-        {renderScreen()}
-      </View>
-      
-      {/* Tab Bar */}
-      <View className="flex-row border-t border-gray-200 bg-white">
-        <TabButton
-          label="Home"
-          isActive={activeTab === "Home"}
-          onPress={() => setActiveTab("Home")}
+    <NavigationContainer>
+      <Tab.Navigator
+        screenOptions={{
+          headerShown: false,
+        }}>
+        <Tab.Screen
+          name="Home"
+          component={HomeScreen}
+          options={{
+            tabBarIcon: ({ color, size, focused }) => (
+              <Ionicons name={focused ? 'home' : 'home-outline'} size={size} color={color} />
+            ),
+          }}
         />
-        <TabButton
-          label="Tasks"
-          isActive={activeTab === "Tasks"}
-          onPress={() => setActiveTab("Tasks")}
+        <Tab.Screen
+          name="Tasks"
+          component={TaskListScreen}
+          options={{
+            tabBarIcon: ({ color, size, focused }) => (
+              <Ionicons
+                name={focused ? 'checkmark-done' : 'checkmark-done-outline'}
+                size={size}
+                color={color}
+              />
+            ),
+          }}
         />
-        <TabButton
-          label="Profile"
-          isActive={activeTab === "Profile"}
-          onPress={() => setActiveTab("Profile")}
+        <Tab.Screen
+          name="Insights"
+          component={InsightsScreen}
+          options={{
+            tabBarIcon: ({ color, size, focused }) => (
+              <Ionicons
+                name={focused ? 'analytics' : 'analytics-outline'}
+                size={size}
+                color={color}
+              />
+            ),
+          }}
         />
-      </View>
-    </SafeAreaView>
-  );
-}
-
-function TabButton({
-  label,
-  isActive,
-  onPress,
-}: {
-  label: string;
-  isActive: boolean;
-  onPress: () => void;
-}) {
-  return (
-    <TouchableOpacity
-      onPress={onPress}
-      className={`flex-1 py-3 items-center ${
-        isActive ? "bg-blue-50" : ""
-      }`}
-    >
-      <Text
-        className={`text-sm font-medium ${
-          isActive ? "text-blue-600" : "text-gray-600"
-        }`}
-      >
-        {label}
-      </Text>
-    </TouchableOpacity>
+        <Tab.Screen
+          name="Notifications"
+          component={NotificationsScreen}
+          options={{
+            tabBarIcon: ({ color, size, focused }) => (
+              <Ionicons
+                name={focused ? 'notifications' : 'notifications-outline'}
+                size={size}
+                color={color}
+              />
+            ),
+          }}
+        />
+        <Tab.Screen
+          name="Profile"
+          component={ProfileScreen}
+          options={{
+            tabBarIcon: ({ color, size, focused }) => (
+              <Ionicons name={focused ? 'person' : 'person-outline'} size={size} color={color} />
+            ),
+          }}
+        />
+      </Tab.Navigator>
+    </NavigationContainer>
   );
 }
