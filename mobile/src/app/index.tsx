@@ -6,6 +6,7 @@ import InsightsScreen from './screens/insights/InsightsScreen';
 import NotificationsScreen from './screens/notifications/NotificationsScreen';
 import ProfileScreen from './screens/profile/ProfileScreen';
 import { Ionicons } from '@expo/vector-icons';
+import { View } from 'react-native';
 
 const Tab = createBottomTabNavigator();
 
@@ -15,6 +16,7 @@ export default function App() {
       <Tab.Navigator
         screenOptions={{
           headerShown: false,
+          tabBarShowLabel: false,
         }}>
         <Tab.Screen
           name="Home"
@@ -42,12 +44,19 @@ export default function App() {
           name="Insights"
           component={InsightsScreen}
           options={{
-            tabBarIcon: ({ color, size, focused }) => (
-              <Ionicons
-                name={focused ? 'analytics' : 'analytics-outline'}
-                size={size}
-                color={color}
-              />
+            tabBarIcon: ({ focused }) => (
+              <View
+                style={{
+                  width: 56,
+                  height: 56,
+                  borderRadius: 28,
+                  backgroundColor: focused ? '#2563eb' : '#e5e7eb',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  marginTop: -20,
+                }}>
+                <Ionicons name="sparkles" size={26} color={focused ? 'white' : '#64748b'} />
+              </View>
             ),
           }}
         />
