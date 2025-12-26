@@ -3,11 +3,11 @@ import { NavigationContainer } from '@react-navigation/native';
 import HomeScreen from './screens/home/HomeScreen';
 import TaskListScreen from './screens/task/TaskListScreen';
 import InsightsScreen from './screens/insights/InsightsScreen';
-import NotificationsScreen from './screens/notifications/NotificationsScreen';
 import ProfileScreen from './screens/profile/ProfileScreen';
 import { Ionicons } from '@expo/vector-icons';
 import { View } from 'react-native';
 import AppHeader from '@/components/app/AppHeader';
+import PulseAi from './screens/pulseAi/PulseAiScreen';
 
 const Tab = createBottomTabNavigator();
 
@@ -58,8 +58,8 @@ export default function App() {
           }}
         />
         <Tab.Screen
-          name="Insights"
-          component={InsightsScreen}
+          name="pulseAi"
+          component={PulseAi}
           options={{
             tabBarLabel: () => null,
             tabBarIcon: ({ focused }) => (
@@ -84,12 +84,12 @@ export default function App() {
           }}
         />
         <Tab.Screen
-          name="Notifications"
-          component={NotificationsScreen}
+          name="Insights"
+          component={InsightsScreen}
           options={{
             tabBarIcon: ({ color, size, focused }) => (
               <Ionicons
-                name={focused ? 'notifications' : 'notifications-outline'}
+                name={focused ? 'stats-chart' : 'stats-chart-outline'}
                 size={size}
                 color={color}
               />

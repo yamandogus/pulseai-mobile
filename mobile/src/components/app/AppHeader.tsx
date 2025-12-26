@@ -16,9 +16,7 @@ export default function AppHeader({ title, subtitle, onRightPress }: Props) {
     month: 'long',
   });
 
-  console.log("day",today);
-  
-
+ 
   return (
     <>
       <View
