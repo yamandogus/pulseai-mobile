@@ -7,16 +7,22 @@ import NotificationsScreen from './screens/notifications/NotificationsScreen';
 import ProfileScreen from './screens/profile/ProfileScreen';
 import { Ionicons } from '@expo/vector-icons';
 import { View } from 'react-native';
+import AppHeader from '@/components/app/AppHeader';
 
 const Tab = createBottomTabNavigator();
+
+// screenOptions={{
+//           headerShown: true,
+//           tabBarShowLabel: false,
+//         }}
 
 export default function App() {
   return (
     <NavigationContainer>
       <Tab.Navigator
         screenOptions={{
-          headerShown: false,
-          tabBarShowLabel: false,
+          tabBarShowLabel: true,
+          headerShown: true, // default açık
         }}>
         <Tab.Screen
           name="Home"
@@ -25,6 +31,15 @@ export default function App() {
             tabBarIcon: ({ color, size, focused }) => (
               <Ionicons name={focused ? 'home' : 'home-outline'} size={size} color={color} />
             ),
+            header: () => (
+              <AppHeader
+                title="Ana Sayfa"
+                subtitle="Hoş geldin 👋"
+                onRightPress={() => {}}
+              />
+            ),
+            headerShown: true,
+            tabBarShowLabel: true,
           }}
         />
         <Tab.Screen
@@ -38,24 +53,32 @@ export default function App() {
                 color={color}
               />
             ),
+            headerShown: true,
+            tabBarShowLabel: true,
           }}
         />
         <Tab.Screen
           name="Insights"
           component={InsightsScreen}
           options={{
+            tabBarLabel: () => null,
             tabBarIcon: ({ focused }) => (
               <View
                 style={{
                   width: 56,
                   height: 56,
                   borderRadius: 28,
-                  backgroundColor: focused ? '#2563eb' : '#e5e7eb',
+                  backgroundColor: '#2563eb',
                   alignItems: 'center',
                   justifyContent: 'center',
                   marginTop: -20,
                 }}>
-                <Ionicons name="sparkles" size={26} color={focused ? 'white' : '#64748b'} />
+                <Ionicons
+                  className="ml-1"
+                  name="sparkles"
+                  size={26}
+                  color={focused ? 'white' : 'dark'}
+                />
               </View>
             ),
           }}
@@ -71,6 +94,8 @@ export default function App() {
                 color={color}
               />
             ),
+            headerShown: true,
+            tabBarShowLabel: true,
           }}
         />
         <Tab.Screen
@@ -80,6 +105,8 @@ export default function App() {
             tabBarIcon: ({ color, size, focused }) => (
               <Ionicons name={focused ? 'person' : 'person-outline'} size={size} color={color} />
             ),
+            headerShown: true,
+            tabBarShowLabel: true,
           }}
         />
       </Tab.Navigator>

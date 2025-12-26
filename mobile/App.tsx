@@ -3,6 +3,7 @@ import './global.css';
 import App from './src/app/index';
 
 export default function RootApp() {
+  
   return (
     <>
       <App />
