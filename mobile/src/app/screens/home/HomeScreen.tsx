@@ -6,7 +6,7 @@ import {ScrollView } from "react-native";
 
 export default function HomeScreen() {
   return (
-    <ScrollView className="flex flex-col px-4 bg-white">
+    <ScrollView className="flex flex-col px-4 bg-[#f5f5f5]">
       <HomeHeader/>
       <PulseAiSuggestions/>
       <PriorityTasks/>

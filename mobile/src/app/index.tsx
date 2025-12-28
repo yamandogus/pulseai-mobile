@@ -23,7 +23,7 @@ function TasksStackNavigator() {
         name="TaskList" 
         component={TaskListScreen}
         options={{
-          headerShown: true,
+          headerShown: false,
           title: 'Görevler',
         }}
       />
@@ -102,6 +102,7 @@ function TabNavigator() {
         component={PulseAi}
         options={{
           tabBarLabel: () => null,
+          headerShown: false,
           tabBarIcon: ({ focused }) => (
             <View
               style={{
@@ -134,7 +135,7 @@ function TabNavigator() {
               color={color}
             />
           ),
-          headerShown: true,
+          headerShown: false,
           tabBarShowLabel: true,
         }}
       />

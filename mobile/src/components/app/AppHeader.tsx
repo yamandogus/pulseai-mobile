@@ -49,7 +49,7 @@ export default function AppHeader({subtitle}: Props) {
         paddingHorizontal: 16,
         height: insets.top + 72,
       }}
-      className="flex-row items-center justify-between bg-white">
+      className="flex-row items-center justify-between bg-[#f5f5f5]">
       {/* SOL */}
       <View className="flex-col">
         <Text className="text-sm capitalize text-gray-500">{today}</Text>

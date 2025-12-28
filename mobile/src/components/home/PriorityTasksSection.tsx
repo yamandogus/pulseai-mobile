@@ -76,7 +76,7 @@ export default function PriorityTasks() {
       {tasks.map((task) => (
         <View
           key={task.id}
-          className="my-2 flex-row items-center justify-between rounded-lg bg-[#f3f3f3] p-4">
+          className="my-2 flex-row items-center justify-between rounded-lg bg-white p-4">
           <View className="flex-row items-center gap-4">
             <View>
               <Checkbox
