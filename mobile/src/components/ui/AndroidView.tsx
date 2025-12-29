@@ -1,5 +1,6 @@
 import { Platform, ScrollViewProps, View, } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { useColors } from '../../context/ThemeContext';
 
 type Props = ScrollViewProps & {
   height?: number;
@@ -7,7 +8,9 @@ type Props = ScrollViewProps & {
 
 export default function AndroidView({ children, height = 72, style, ...rest }: Props) {
   const insets = useSafeAreaInsets();
+  const colors = useColors();
   const topInset = Platform.OS === 'ios' ? 0 : insets.top;
+
   return (
     <View
       {...rest}
@@ -17,7 +20,7 @@ export default function AndroidView({ children, height = 72, style, ...rest }: P
           paddingTop: topInset,
           paddingHorizontal: 16,
           height: topInset + height,
-          backgroundColor: '#f5f5f5',
+          backgroundColor: colors.background,
         },
         style,
       ]}>
@@ -25,3 +28,4 @@ export default function AndroidView({ children, height = 72, style, ...rest }: P
     </View>
   );
 }
+

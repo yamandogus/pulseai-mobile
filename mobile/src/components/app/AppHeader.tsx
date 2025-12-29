@@ -5,6 +5,7 @@ import { useNavigation } from '@react-navigation/native';
 import type { CompositeNavigationProp } from '@react-navigation/native';
 import type { BottomTabNavigationProp } from '@react-navigation/bottom-tabs';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import { useColors } from '@/context/ThemeContext';
 
 // Tab Navigator Param List
 type TabParamList = {
@@ -32,9 +33,10 @@ type Props = {
   onRightPress?: () => void;
 };
 
-export default function AppHeader({subtitle}: Props) {
+export default function AppHeader({ subtitle }: Props) {
   const insets = useSafeAreaInsets();
   const navigation = useNavigation<NavigationProp>();
+  const colors = useColors();
 
   const today = new Date().toLocaleDateString('tr-TR', {
     weekday: 'long',
@@ -48,19 +50,20 @@ export default function AppHeader({subtitle}: Props) {
         paddingTop: insets.top,
         paddingHorizontal: 16,
         height: insets.top + 72,
+        backgroundColor: colors.background,
       }}
-      className="flex-row items-center justify-between bg-[#f5f5f5]">
+      className="flex-row items-center justify-between">
       {/* SOL */}
       <View className="flex-col">
-        <Text className="text-sm capitalize text-gray-500">{today}</Text>
+        <Text style={{ color: colors.textSecondary }} className="text-sm capitalize">{today}</Text>
 
-        {subtitle && <Text className="text-xl font-bold text-black">Merhaba Doğuş 👋</Text>}
+        {subtitle && <Text style={{ color: colors.text }} className="text-xl font-bold">Merhaba Doğuş 👋</Text>}
       </View>
 
       {/* SAĞ */}
       <View className="flex-row items-center gap-4">
         <TouchableOpacity onPress={() => navigation.navigate('Notifications')}>
-          <Ionicons name="notifications-outline" size={28} color="#111" />
+          <Ionicons name="notifications-outline" size={28} color={colors.text} />
         </TouchableOpacity>
 
         <TouchableOpacity onPress={() => navigation.navigate('Profile')}>
@@ -73,3 +76,4 @@ export default function AppHeader({subtitle}: Props) {
     </View>
   );
 }
+

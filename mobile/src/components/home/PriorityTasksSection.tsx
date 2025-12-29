@@ -3,6 +3,7 @@ import { Ionicons } from '@expo/vector-icons';
 import Checkbox from 'expo-checkbox';
 import { useState } from 'react';
 import NavigateButton from '../ui/NavigateButton';
+import { useColors } from '../../context/ThemeContext';
 
 type Tasks = {
   id: string;
@@ -59,6 +60,7 @@ export const dummyTasks: Tasks[] = [
 
 export default function PriorityTasks() {
   const [tasks, setTasks] = useState(dummyTasks);
+  const colors = useColors();
 
   const toggleSelectedTask = (id: string) => {
     console.log('tıklandı');
@@ -70,32 +72,33 @@ export default function PriorityTasks() {
   return (
     <View className="mt-10">
       <View className="flex-row justify-between">
-        <Text className="text-xl font-bold"> Öncelikli Görevler</Text>
-      <NavigateButton title='Tümü' nav='Tasks'/>
+        <Text style={{ color: colors.text }} className="text-xl font-bold"> Öncelikli Görevler</Text>
+        <NavigateButton title='Tümü' nav='Tasks' />
       </View>
       {tasks.map((task) => (
         <View
           key={task.id}
-          className="my-2 flex-row items-center justify-between rounded-lg bg-white p-4">
+          style={{ backgroundColor: colors.card, borderColor: colors.border, borderWidth: 1 }}
+          className="my-2 flex-row items-center justify-between rounded-lg p-4">
           <View className="flex-row items-center gap-4">
             <View>
               <Checkbox
                 value={task.checked}
                 onValueChange={() => toggleSelectedTask(task.id)}
-                color={task.checked ? '#4630EB' : undefined}
+                color={task.checked ? '#6366F1' : undefined}
               />
             </View>
             <View className="flex-col gap-2">
-              <Text className="text-md font-bold">{task.title}</Text>
+              <Text style={{ color: colors.text }} className="text-md font-bold">{task.title}</Text>
               <View className="flex-row gap-2">
-                <Text className="text-sm">{task.priority}</Text>
-                <Text className="text-sm">{task.time}</Text>
+                <Text style={{ color: colors.textSecondary }} className="text-sm">{task.priority}</Text>
+                <Text style={{ color: colors.textSecondary }} className="text-sm">{task.time}</Text>
               </View>
             </View>
           </View>
           <View>
             <TouchableOpacity>
-              <Ionicons name="chevron-forward" size={16} />
+              <Ionicons name="chevron-forward" size={16} color={colors.textSecondary} />
             </TouchableOpacity>
           </View>
         </View>
@@ -103,3 +106,4 @@ export default function PriorityTasks() {
     </View>
   );
 }
+

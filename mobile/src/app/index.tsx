@@ -1,6 +1,6 @@
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import { NavigationContainer } from '@react-navigation/native';
+import { NavigationContainer, DefaultTheme, DarkTheme } from '@react-navigation/native';
 import HomeScreen from './screens/home/HomeScreen';
 import TaskListScreen from './screens/task/TaskListScreen';
 import TaksDetailScreen from './screens/task/TaksDetailScreen';
@@ -11,24 +11,50 @@ import { Ionicons } from '@expo/vector-icons';
 import { View } from 'react-native';
 import AppHeader from '@/components/app/AppHeader';
 import PulseAi from './screens/pulseAi/PulseAiScreen';
+import { useTheme, useColors } from '../context/ThemeContext';
 
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
+
+// Custom Navigation Themes
+const LightNavigationTheme = {
+  ...DefaultTheme,
+  colors: {
+    ...DefaultTheme.colors,
+    background: '#FFFFFF',
+    card: '#FFFFFF',
+    text: '#1A1A1A',
+    border: '#E5E7EB',
+    primary: '#6366F1',
+  },
+};
+
+const DarkNavigationTheme = {
+  ...DarkTheme,
+  colors: {
+    ...DarkTheme.colors,
+    background: '#0F172A',
+    card: '#1E293B',
+    text: '#F8FAFC',
+    border: '#334155',
+    primary: '#818CF8',
+  },
+};
 
 // Tasks için Stack Navigator (TaskList -> TaskDetail)
 function TasksStackNavigator() {
   return (
     <Stack.Navigator>
-      <Stack.Screen 
-        name="TaskList" 
+      <Stack.Screen
+        name="TaskList"
         component={TaskListScreen}
         options={{
           headerShown: false,
           title: 'Görevler',
         }}
       />
-      <Stack.Screen 
-        name="TaskDetail" 
+      <Stack.Screen
+        name="TaskDetail"
         component={TaksDetailScreen}
         options={{
           headerShown: true,
@@ -44,12 +70,12 @@ function RootNavigator() {
   return (
     <Stack.Navigator screenOptions={{ headerShown: false }}>
       <Stack.Screen name="MainTabs" component={TabNavigator} />
-      <Stack.Screen 
-        name="Notifications" 
+      <Stack.Screen
+        name="Notifications"
         component={NotificationsScreen}
-        options={{ 
-          headerShown: true, 
-          title: 'Bildirimler' 
+        options={{
+          headerShown: true,
+          title: 'Bildirimler'
         }}
       />
     </Stack.Navigator>
@@ -58,11 +84,24 @@ function RootNavigator() {
 
 // Tab Navigator
 function TabNavigator() {
+  const { isDark } = useTheme();
+  const colors = useColors();
+
   return (
     <Tab.Navigator
       screenOptions={{
         tabBarShowLabel: true,
         headerShown: true,
+        tabBarStyle: {
+          backgroundColor: colors.card,
+          borderTopColor: colors.border,
+        },
+        tabBarActiveTintColor: colors.primary,
+        tabBarInactiveTintColor: colors.textSecondary,
+        headerStyle: {
+          backgroundColor: colors.card,
+        },
+        headerTintColor: colors.text,
       }}>
       <Tab.Screen
         name="Home"
@@ -75,7 +114,7 @@ function TabNavigator() {
             <AppHeader
               title="Ana Sayfa"
               subtitle="Hoş geldin 👋"
-              onRightPress={() => {}}
+              onRightPress={() => { }}
             />
           ),
           headerShown: true,
@@ -109,16 +148,20 @@ function TabNavigator() {
                 width: 56,
                 height: 56,
                 borderRadius: 28,
-                backgroundColor: '#2563eb',
+                backgroundColor: '#6366F1',
                 alignItems: 'center',
                 justifyContent: 'center',
                 marginTop: -20,
+                shadowColor: '#6366F1',
+                shadowOffset: { width: 0, height: 4 },
+                shadowOpacity: 0.3,
+                shadowRadius: 8,
+                elevation: 8,
               }}>
               <Ionicons
-                className="ml-1"
                 name="sparkles"
                 size={26}
-                color={focused ? 'white' : 'dark'}
+                color="white"
               />
             </View>
           ),
@@ -146,7 +189,7 @@ function TabNavigator() {
           tabBarIcon: ({ color, size, focused }) => (
             <Ionicons name={focused ? 'person' : 'person-outline'} size={size} color={color} />
           ),
-          headerShown: true,
+          headerShown: false,
           tabBarShowLabel: true,
         }}
       />
@@ -155,9 +198,15 @@ function TabNavigator() {
 }
 
 export default function App() {
+  const { isDark } = useTheme();
+  const colors = useColors();
+
   return (
-    <NavigationContainer>
-      <RootNavigator />
-    </NavigationContainer>
+    <View style={{ flex: 1, backgroundColor: colors.background }}>
+      <NavigationContainer theme={isDark ? DarkNavigationTheme : LightNavigationTheme}>
+        <RootNavigator />
+      </NavigationContainer>
+    </View>
   );
 }
+

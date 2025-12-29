@@ -1,24 +1,38 @@
 import { View, Text, TouchableOpacity } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
+import { useTheme, useColors } from '../../context/ThemeContext';
 
 export default function PulseAiSuggestions() {
+  const { isDark } = useTheme();
+  const colors = useColors();
+
   return (
-    <View className="mt-10 flex flex-col gap-4 bg-[#f0f9ff] p-4">
+    <View
+      style={{
+        backgroundColor: isDark ? '#1E3A5F' : '#f0f9ff',
+        borderColor: colors.border,
+        borderWidth: isDark ? 1 : 0,
+      }}
+      className="mt-10 flex flex-col gap-4 p-4 rounded-xl"
+    >
       <View className="flex flex-row items-center gap-4">
         <View>
-          <Ionicons className="ml-1" name="sparkles" color={'#5dade8'} size={26} />
+          <Ionicons className="ml-1" name="sparkles" color={isDark ? '#60A5FA' : '#5dade8'} size={26} />
         </View>
-        <Text className="text-xl font-bold text-blue-400">AI Önerisi</Text>
+        <Text style={{ color: isDark ? '#60A5FA' : '#60a5fa' }} className="text-xl font-bold">AI Önerisi</Text>
       </View>
       <View>
-        <Text className="text-md">
+        <Text style={{ color: colors.text }} className="text-md">
           Bugün toplantıların yoğun. &quot;Haftalık Rapor&quot; görevini 14.00&apos;e ertelemek
           ister misin?
         </Text>
       </View>
       <View className="flex-row gap-4">
-        <TouchableOpacity className="h-12 flex-1 items-center justify-center rounded-md bg-white">
-          <Text className="font-bold text-blue-400">Yoksay</Text>
+        <TouchableOpacity
+          style={{ backgroundColor: isDark ? colors.surface : 'white', borderColor: colors.border, borderWidth: isDark ? 1 : 0 }}
+          className="h-12 flex-1 items-center justify-center rounded-md"
+        >
+          <Text style={{ color: colors.primary }} className="font-bold">Yoksay</Text>
         </TouchableOpacity>
 
         <TouchableOpacity className="h-12 flex-1 items-center justify-center rounded-md bg-[#0384c6]">
@@ -28,3 +42,4 @@ export default function PulseAiSuggestions() {
     </View>
   );
 }
+
