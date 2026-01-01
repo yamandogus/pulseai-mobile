@@ -15,35 +15,48 @@ export default function PulseAiSuggestions() {
           shadowOffset: { width: 0, height: 4 },
           shadowOpacity: 0.15,
           shadowRadius: 12,
-          elevation: 6
+          elevation: 6,
         }}
-        className="rounded-3xl overflow-hidden"
-      >
+        className="overflow-hidden rounded-3xl">
         <LinearGradient
           colors={isDark ? ['#4338ca', '#6366F1'] : ['#E0E7FF', '#EEF2FF']}
           start={{ x: 0, y: 0 }}
           end={{ x: 1, y: 1 }}
-          style={{ padding: 20 }}
-        >
+          style={{ padding: 20 }}>
           {/* Decorative Elements - Subtle */}
-          <View className="absolute top-0 right-0 w-32 h-32 bg-white/10 dark:bg-white/5 rounded-bl-full translate-x-8 translate-y-[-8]" />
+          <View className="absolute right-0 top-0 h-32 w-32 translate-x-8 translate-y-[-8] rounded-bl-full bg-white/10 dark:bg-white/5" />
 
-          <View className="flex-row items-center justify-between mb-3">
+          <View className="mb-3 flex-row items-center justify-between">
             <View className="flex-row items-center">
-              <View style={{ backgroundColor: isDark ? 'rgba(255,255,255,0.2)' : colors.primary }} className="w-8 h-8 rounded-full items-center justify-center">
+              <View
+                style={{ backgroundColor: isDark ? 'rgba(255,255,255,0.2)' : colors.primary }}
+                className="h-8 w-8 items-center justify-center rounded-full">
                 <Ionicons name="sparkles" size={16} color="white" />
               </View>
-              <Text style={{ color: isDark ? 'white' : colors.primary }} className="text-sm font-bold ml-2 tracking-wide">Yapay Zeka Önerisi</Text>
+              <Text
+                style={{ color: isDark ? 'white' : colors.primary }}
+                className="ml-2 text-sm font-bold tracking-wide">
+                Yapay Zeka Önerisi
+              </Text>
             </View>
             <TouchableOpacity>
-              <Ionicons name="close" size={20} color={isDark ? 'white' : colors.textSecondary} style={{ opacity: 0.6 }} />
+              <Ionicons
+                name="close"
+                size={20}
+                color={isDark ? 'white' : colors.textSecondary}
+                style={{ opacity: 0.6 }}
+              />
             </TouchableOpacity>
           </View>
 
-          <Text style={{ color: isDark ? 'white' : colors.text }} className="text-lg font-bold leading-6 mt-1">
-            "Haftalık Rapor" 14:00'te teslim edilmeli.
+          <Text
+            style={{ color: isDark ? 'white' : colors.text }}
+            className="mt-1 text-lg font-bold leading-6">
+            &quot;Haftalık Rapor&quot; 14:00&apos;te teslim edilmeli.
           </Text>
-          <Text style={{ color: isDark ? '#E0E7FF' : colors.textSecondary }} className="text-sm mt-1 mb-5 leading-5">
+          <Text
+            style={{ color: isDark ? '#E0E7FF' : colors.textSecondary }}
+            className="mb-5 mt-1 text-sm leading-5">
             Bugün programın çok yoğun. Bunu yarına ertelememi ister misin?
           </Text>
 
@@ -51,16 +64,26 @@ export default function PulseAiSuggestions() {
             <TouchableOpacity
               activeOpacity={0.9}
               style={{ backgroundColor: isDark ? 'white' : colors.primary }}
-              className="px-5 py-3 rounded-xl flex-1 items-center shadow-sm"
-            >
-              <Text style={{ color: isDark ? colors.primary : 'white' }} className="font-bold text-sm">Ertele</Text>
+              className="flex-1 items-center rounded-xl px-5 py-3 shadow-sm">
+              <Text
+                style={{ color: isDark ? colors.primary : 'white' }}
+                className="text-sm font-bold">
+                Ertele
+              </Text>
             </TouchableOpacity>
             <TouchableOpacity
               activeOpacity={0.7}
-              style={{ backgroundColor: isDark ? 'rgba(255,255,255,0.1)' : 'white', borderWidth: 1, borderColor: isDark ? 'transparent' : '#E5E7EB' }}
-              className="px-5 py-3 rounded-xl flex-1 items-center"
-            >
-              <Text style={{ color: isDark ? 'white' : colors.text }} className="font-medium text-sm">Yoksay</Text>
+              style={{
+                backgroundColor: isDark ? 'rgba(255,255,255,0.1)' : 'white',
+                borderWidth: 1,
+                borderColor: isDark ? 'transparent' : '#E5E7EB',
+              }}
+              className="flex-1 items-center rounded-xl px-5 py-3">
+              <Text
+                style={{ color: isDark ? 'white' : colors.text }}
+                className="text-sm font-medium">
+                Yoksay
+              </Text>
             </TouchableOpacity>
           </View>
         </LinearGradient>

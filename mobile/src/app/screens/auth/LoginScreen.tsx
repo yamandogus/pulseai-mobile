@@ -138,7 +138,7 @@ export default function LoginScreen({ navigation }: { navigation: any }) {
           {/* Register Link */}
           <View className="flex-row justify-center">
             <Text style={{ color: colors.textSecondary }} className="text-base">
-              Don't have an account?{' '}
+              Don&apos;t have an account?{' '}
             </Text>
             <TouchableOpacity onPress={() => navigation.navigate('Register')}>
               <Text className="text-indigo-500 font-bold text-base">
