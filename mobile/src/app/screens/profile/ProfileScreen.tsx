@@ -1,7 +1,6 @@
 import React, { useEffect } from "react";
 import { View, Text, ScrollView, TouchableOpacity, Image, Switch as RNSwitch } from "react-native";
-import { useSharedValue } from "react-native-reanimated";
-import { useTheme, useColors } from "../../../context/ThemeContext";
+import { useTheme, useColors } from "@/context/ThemeContext";
 import { Ionicons } from "@expo/vector-icons";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
@@ -45,6 +44,7 @@ export default function ProfileScreen() {
   const { isDark, toggleTheme } = useTheme();
   const colors = useColors();
   const insets = useSafeAreaInsets();
+
 
   return (
     <ScrollView
@@ -117,10 +117,11 @@ export default function ProfileScreen() {
             title="Karanlık Mod"
             subtitle="Uygulama görünümü"
             type="switch"
+            onPress={() => toggleTheme()}
             value={
               <RNSwitch
                 value={isDark}
-                onValueChange={toggleTheme}
+                onValueChange={() => toggleTheme()}
                 trackColor={{ false: '#E5E7EB', true: '#6366F1' }}
                 thumbColor={'#FFFFFF'}
               />

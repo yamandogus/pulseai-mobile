@@ -86,6 +86,7 @@ export const ThemeProvider: React.FC<ThemeProviderProps> = ({ children }) => {
 
     // Temayı toggle et
     const toggleTheme = () => {
+        console.log('Tema değiştiriliyor:', theme);
         const newTheme = theme === 'light' ? 'dark' : 'light';
         setTheme(newTheme);
     };
