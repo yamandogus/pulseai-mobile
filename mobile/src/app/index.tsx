@@ -65,17 +65,48 @@ function TasksStackNavigator() {
   );
 }
 
+import LoginScreen from './screens/auth/LoginScreen';
+import RegisterScreen from './screens/auth/RegisterScreen';
+import OperationsScreen from './screens/operations/OperationsScreen';
+
+// ... (previous imports)
+
+// Auth Stack Navigator
+function AuthStackNavigator() {
+  return (
+    <Stack.Navigator screenOptions={{ headerShown: false }}>
+      <Stack.Screen name="Login" component={LoginScreen} />
+      <Stack.Screen name="Register" component={RegisterScreen} />
+    </Stack.Navigator>
+  );
+}
+
 // Ana Stack Navigator (Tab + diğer sayfalar)
 function RootNavigator() {
   return (
     <Stack.Navigator screenOptions={{ headerShown: false }}>
+      {/* 
+        NOTE: For production, you would conditionally render Auth vs MainTabs 
+        based on authentication state (e.g., user ? MainTabs : Auth).
+        For now, allowing navigation to both for UI verification.
+      */}
       <Stack.Screen name="MainTabs" component={TabNavigator} />
+      <Stack.Screen name="Auth" component={AuthStackNavigator} />
+
       <Stack.Screen
         name="Notifications"
         component={NotificationsScreen}
         options={{
           headerShown: true,
           title: 'Bildirimler'
+        }}
+      />
+      <Stack.Screen
+        name="Operations"
+        component={OperationsScreen}
+        options={{
+          headerShown: true,
+          title: 'İşlemler' // "Operations" in Turkish to match existing app language
         }}
       />
     </Stack.Navigator>

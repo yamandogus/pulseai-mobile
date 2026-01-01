@@ -1,92 +1,180 @@
-import { View, Text, StyleSheet } from "react-native";
+import React, { useEffect } from "react";
+import { View, Text, ScrollView, TouchableOpacity, Image, Switch as RNSwitch } from "react-native";
 import { useSharedValue } from "react-native-reanimated";
-import { useEffect } from "react";
-import Switch from "../../../components/ui/Switch";
 import { useTheme, useColors } from "../../../context/ThemeContext";
+import { Ionicons } from "@expo/vector-icons";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
+
+// Custom Setting Item Component
+const SettingItem = ({ icon, title, subtitle, value, onPress, type = "arrow", colors }: any) => (
+  <TouchableOpacity
+    activeOpacity={0.7}
+    onPress={onPress}
+    style={{ borderBottomWidth: 1, borderBottomColor: colors.border }}
+    className="flex-row items-center py-4"
+  >
+    <View
+      style={{ backgroundColor: colors.background }}
+      className="w-10 h-10 rounded-full items-center justify-center mr-4"
+    >
+      <Ionicons name={icon} size={22} color={colors.primary} />
+    </View>
+    <View className="flex-1">
+      <Text style={{ color: colors.text }} className="text-base font-semibold">{title}</Text>
+      {subtitle && (
+        <Text style={{ color: colors.textSecondary }} className="text-xs mt-0.5">{subtitle}</Text>
+      )}
+    </View>
+
+    {type === "arrow" && (
+      <Ionicons name="chevron-forward" size={20} color={colors.textSecondary} />
+    )}
+    {type === "value" && (
+      <Text style={{ color: colors.textSecondary }} className="font-medium">{value}</Text>
+    )}
+    {type === "switch" && (
+      <View pointerEvents="none">
+        {/* Switch is controlled by parent, this is just visual if needed or passed as children */}
+        {value}
+      </View>
+    )}
+  </TouchableOpacity>
+);
 
 export default function ProfileScreen() {
   const { isDark, toggleTheme } = useTheme();
   const colors = useColors();
-
-  // Switch için shared value - tema durumuna göre senkronize
-  const switchValue = useSharedValue<boolean>(isDark);
-
-  // Tema değiştiğinde switch'i güncelle
-  useEffect(() => {
-    switchValue.value = isDark;
-  }, [isDark]);
-
-  const handleToggle = () => {
-    toggleTheme();
-  };
+  const insets = useSafeAreaInsets();
 
   return (
-    <View style={[styles.container, { backgroundColor: colors.background }]}>
-      {/* Başlık */}
-      <Text style={[styles.title, { color: colors.text }]}>Profile</Text>
+    <ScrollView
+      style={{ flex: 1, backgroundColor: colors.background }}
+      contentContainerStyle={{ paddingBottom: 100 }}
+    >
+      {/* Header / Profile Card */}
+      <View
+        style={{
+          backgroundColor: colors.card,
+          paddingTop: insets.top + 20,
+          borderBottomLeftRadius: 32,
+          borderBottomRightRadius: 32,
+        }}
+        className="pb-8 px-6 shadow-sm mb-6"
+      >
+        <View className="flex-row items-center justify-between mb-6">
+          <Text style={{ color: colors.text }} className="text-2xl font-bold">Profile</Text>
+          <TouchableOpacity>
+            <Ionicons name="settings-outline" size={24} color={colors.text} />
+          </TouchableOpacity>
+        </View>
 
-      {/* Dark Mode Ayarı */}
-      <View style={[styles.settingCard, { backgroundColor: colors.card, borderColor: colors.border }]}>
-        <View style={styles.settingRow}>
-          <View style={styles.settingInfo}>
-            <Text style={[styles.settingLabel, { color: colors.text }]}>
-              🌙 Dark Mode
-            </Text>
-            <Text style={[styles.settingDescription, { color: colors.textSecondary }]}>
-              {isDark ? "Karanlık tema aktif" : "Aydınlık tema aktif"}
-            </Text>
+        <View className="flex-row items-center">
+          <View className="relative">
+            <View className="w-20 h-20 bg-gray-200 rounded-full items-center justify-center overflow-hidden border-2 border-white dark:border-gray-700">
+              <Ionicons name="person" size={40} color="#9CA3AF" />
+              {/* <Image source={{ uri: '...' }} className="w-full h-full" /> */}
+            </View>
+            <View className="absolute bottom-0 right-0 w-6 h-6 bg-indigo-500 rounded-full items-center justify-center border-2 border-white dark:border-gray-800">
+              <Ionicons name="pencil" size={12} color="white" />
+            </View>
           </View>
+          <View className="ml-5 flex-1">
+            <Text style={{ color: colors.text }} className="text-xl font-bold">John Doe</Text>
+            <Text style={{ color: colors.textSecondary }} className="text-sm">Free Plan Member</Text>
 
-          <Switch
-            value={switchValue}
-            onPress={handleToggle}
-            style={styles.switch}
-            trackColors={{
-              on: "#6366F1",  // Primary color
-              off: "#E5E7EB", // Gray
-            }}
-          />
+            <TouchableOpacity className="bg-indigo-600 px-4 py-2 rounded-lg self-start mt-3">
+              <Text className="text-white text-xs font-bold">Upgrade to Pro</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+
+        {/* Profile Stats */}
+        <View className="flex-row justify-between mt-8 px-2">
+          <View className="items-center">
+            <Text style={{ color: colors.text }} className="text-xl font-bold">128</Text>
+            <Text style={{ color: colors.textSecondary }} className="text-xs">Tasks</Text>
+          </View>
+          <View style={{ width: 1, height: '100%', backgroundColor: colors.border }} />
+          <View className="items-center">
+            <Text style={{ color: colors.text }} className="text-xl font-bold">4.8</Text>
+            <Text style={{ color: colors.textSecondary }} className="text-xs">Rating</Text>
+          </View>
+          <View style={{ width: 1, height: '100%', backgroundColor: colors.border }} />
+          <View className="items-center">
+            <Text style={{ color: colors.text }} className="text-xl font-bold">85%</Text>
+            <Text style={{ color: colors.textSecondary }} className="text-xs">Success</Text>
+          </View>
         </View>
       </View>
-    </View>
+
+      {/* Settings Sections */}
+      <View className="px-6">
+        <Text style={{ color: colors.textSecondary }} className="text-sm font-bold uppercase mb-2 ml-1 opacity-70">
+          Preferences
+        </Text>
+        <View style={{ backgroundColor: colors.card, borderRadius: 16 }} className="px-4 mb-6">
+          <SettingItem
+            icon="moon"
+            title="Dark Mode"
+            subtitle="Adjust app appearance"
+            type="switch"
+            value={
+              <RNSwitch
+                value={isDark}
+                onValueChange={toggleTheme}
+                trackColor={{ false: '#E5E7EB', true: '#6366F1' }}
+                thumbColor={'#FFFFFF'}
+              />
+            }
+            colors={colors}
+          />
+          <SettingItem
+            icon="notifications"
+            title="Notifications"
+            subtitle="Manage alerts"
+            type="arrow"
+            colors={colors}
+          />
+          <SettingItem
+            icon="globe"
+            title="Language"
+            value="English"
+            type="value"
+            colors={colors}
+            onPress={() => { }}
+          />
+        </View>
+
+        <Text style={{ color: colors.textSecondary }} className="text-sm font-bold uppercase mb-2 ml-1 opacity-70">
+          Support
+        </Text>
+        <View style={{ backgroundColor: colors.card, borderRadius: 16 }} className="px-4 mb-8">
+          <SettingItem
+            icon="help-buoy"
+            title="Help Center"
+            colors={colors}
+          />
+          <SettingItem
+            icon="shield-checkmark"
+            title="Privacy Policy"
+            colors={colors}
+          />
+          <TouchableOpacity
+            className="flex-row items-center py-4"
+            onPress={() => console.log('Logout')}
+          >
+            <View className="w-10 h-10 rounded-full bg-red-50 items-center justify-center mr-4">
+              <Ionicons name="log-out" size={22} color="#EF4444" />
+            </View>
+            <Text className="text-red-500 text-base font-semibold">Log Out</Text>
+          </TouchableOpacity>
+        </View>
+
+        <Text style={{ color: colors.textSecondary }} className="text-center text-xs mb-8 opacity-50">
+          Version 1.0.0 (Build 102)
+        </Text>
+
+      </View>
+    </ScrollView>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    paddingHorizontal: 20,
-    paddingTop: 60,
-  },
-  title: {
-    fontSize: 28,
-    fontWeight: "bold",
-    marginBottom: 30,
-  },
-  settingCard: {
-    borderRadius: 16,
-    padding: 16,
-    borderWidth: 1,
-  },
-  settingRow: {
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "space-between",
-  },
-  settingInfo: {
-    flex: 1,
-  },
-  settingLabel: {
-    fontSize: 16,
-    fontWeight: "600",
-    marginBottom: 4,
-  },
-  settingDescription: {
-    fontSize: 13,
-  },
-  switch: {
-    width: 60,
-    height: 32,
-    padding: 4,
-  },
-});
