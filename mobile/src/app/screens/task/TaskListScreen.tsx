@@ -1,21 +1,23 @@
-import { View, Text, TextInput, TouchableOpacity, ScrollView } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, ScrollView, Platform } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import Animated, {
   useAnimatedStyle,
   useDerivedValue,
   useSharedValue,
   withTiming,
+  FadeInDown
 } from 'react-native-reanimated';
 import { useTheme, useColors } from '../../../context/ThemeContext';
 import Checkbox from 'expo-checkbox';
 import { useState } from 'react';
-import { dummyTasks, getPriorityColor, getStatusColor, getCategoryIcon } from './task';
-
+import { dummyTasks, getPriorityColor, getCategoryIcon } from './task';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 export default function TaskListScreen() {
   const searchOpen = useSharedValue(0);
   const { isDark } = useTheme();
   const colors = useColors();
+  const insets = useSafeAreaInsets();
   const [tasks, setTasks] = useState(dummyTasks);
   const [filter, setFilter] = useState<'Tümü' | 'Aktif' | 'Tamamlandı'>('Tümü');
 
@@ -26,6 +28,7 @@ export default function TaskListScreen() {
   const animatedStyle = useAnimatedStyle(() => ({
     height: animatedHeight.value,
     opacity: searchOpen.value ? 1 : 0,
+    marginBottom: searchOpen.value ? 16 : 0,
   }));
 
   const toggleTask = (id: string) => {
@@ -43,89 +46,134 @@ export default function TaskListScreen() {
   const completedCount = tasks.filter(t => t.checked).length;
 
   return (
-    <View style={{ flex: 1, backgroundColor: colors.background, paddingHorizontal: 16, paddingTop: 50 }}>
-      {/* HEADER */}
-      <View className="flex-row items-center justify-between">
-        <View>
-          <Text style={{ color: colors.text }} className="text-2xl font-bold">Görevler</Text>
-          <Text style={{ color: colors.textSecondary }} className="text-sm mt-1">
-            {completedCount}/{tasks.length} tamamlandı
-          </Text>
-        </View>
+    <View style={{ flex: 1, backgroundColor: colors.background }}>
+      <View
+        style={{
+          paddingTop: insets.top + 10,
+          paddingHorizontal: 20,
+          paddingBottom: 16,
+          backgroundColor: colors.background,
+        }}
+        className="z-10"
+      >
+        {/* HEADER */}
+        <View className="flex-row items-center justify-between mb-4">
+          <View>
+            <Text style={{ color: colors.text }} className="text-3xl font-bold tracking-tight">Görevler</Text>
+            <View className="flex-row items-center mt-1">
+              <View className="bg-green-500/10 px-2 py-0.5 rounded-md mr-2">
+                <Text className="text-green-500 text-xs font-bold">{completedCount} TAMAMLANDI</Text>
+              </View>
+              <Text style={{ color: colors.textSecondary }} className="text-sm font-medium">
+                {tasks.length - completedCount} bekleyen
+              </Text>
+            </View>
+          </View>
 
-        <TouchableOpacity
-          onPress={() => { searchOpen.value = searchOpen.value ? 0 : 1; }}
-          style={{ backgroundColor: colors.card, borderColor: colors.border, borderWidth: 1 }}
-          className="flex-row items-center gap-2 rounded-full px-3 py-2">
-          <Ionicons name="search" size={20} color={colors.text} />
-        </TouchableOpacity>
-      </View>
-
-      {/* FILTER TABS */}
-      <View className="flex-row gap-2 mt-4">
-        {(['Tümü', 'Aktif', 'Tamamlandı'] as const).map((tab) => (
           <TouchableOpacity
-            key={tab}
-            onPress={() => setFilter(tab)}
-            style={{
-              backgroundColor: filter === tab ? colors.primary : colors.card,
-              borderColor: filter === tab ? colors.primary : colors.border,
-              borderWidth: 1,
-            }}
-            className="px-4 py-2 rounded-full"
-          >
-            <Text style={{ color: filter === tab ? '#FFFFFF' : colors.text }} className="text-sm font-medium">
-              {tab}
-            </Text>
+            onPress={() => { searchOpen.value = searchOpen.value ? 0 : 1; }}
+            style={{ backgroundColor: colors.card }}
+            className="w-12 h-12 rounded-full items-center justify-center shadow-sm border border-gray-100 dark:border-gray-800">
+            <Ionicons name="search" size={22} color={colors.text} />
           </TouchableOpacity>
-        ))}
-      </View>
-
-      {/* SEARCH ACCORDION */}
-      <Animated.View style={animatedStyle} className="mt-3 overflow-hidden">
-        <View className="h-[60px] justify-center rounded-xl">
-          <TextInput
-            placeholder="Görev ara..."
-            placeholderTextColor={colors.textSecondary}
-            style={{ backgroundColor: colors.card, color: colors.text, borderColor: colors.border, borderWidth: 1, paddingHorizontal: 16, borderRadius: 16 }}
-            className="text-base h-full"
-          />
         </View>
-      </Animated.View>
+
+        {/* SEARCH ACCORDION */}
+        <Animated.View style={animatedStyle} className="overflow-hidden">
+          <View className="h-[60px] justify-center">
+            <View
+              style={{ backgroundColor: colors.card }}
+              className="flex-row items-center px-4 h-12 rounded-2xl border border-gray-200 dark:border-gray-700"
+            >
+              <Ionicons name="search-outline" size={20} color={colors.textSecondary} style={{ marginRight: 8 }} />
+              <TextInput
+                placeholder="Görevlerde ara..."
+                placeholderTextColor={colors.textSecondary}
+                style={{ color: colors.text, flex: 1, height: '100%' }}
+              />
+            </View>
+          </View>
+        </Animated.View>
+
+        {/* FILTER TABS */}
+        <View className="flex-row">
+          {(['Tümü', 'Aktif', 'Tamamlandı'] as const).map((tab) => {
+            const isActive = filter === tab;
+            return (
+              <TouchableOpacity
+                key={tab}
+                onPress={() => setFilter(tab)}
+                style={{
+                  backgroundColor: isActive ? colors.primary : 'transparent',
+                }}
+                className={`px-5 py-2 rounded-full mr-2 ${!isActive && 'border border-gray-200 dark:border-gray-700'}`}
+              >
+                <Text
+                  style={{
+                    color: isActive ? '#FFFFFF' : colors.textSecondary,
+                    fontWeight: isActive ? '600' : '500'
+                  }}
+                  className="text-sm"
+                >
+                  {tab}
+                </Text>
+              </TouchableOpacity>
+            );
+          })}
+        </View>
+      </View>
 
       {/* TASK LIST */}
-      <ScrollView className="mt-4" showsVerticalScrollIndicator={false}>
-        {filteredTasks.map((task) => {
+      <ScrollView
+        contentContainerStyle={{ paddingHorizontal: 20, paddingBottom: 100 }}
+        showsVerticalScrollIndicator={false}
+      >
+        {filteredTasks.map((task, index) => {
           const priorityColors = getPriorityColor(task.priority, isDark);
-          const statusColors = getStatusColor(task.status, isDark);
           const completedSubtasks = task.subtasks?.filter(s => s.checked).length || 0;
           const totalSubtasks = task.subtasks?.length || 0;
 
           return (
-            <View
+            <Animated.View
+              entering={FadeInDown.delay(index * 100).springify()}
               key={task.id}
               style={{
                 backgroundColor: colors.card,
-                borderColor: colors.border,
-                borderWidth: 1,
-                opacity: task.checked ? 0.7 : 1,
+                shadowColor: colors.shadow,
+                shadowOffset: { width: 0, height: 4 },
+                shadowOpacity: 0.05,
+                shadowRadius: 12,
+                elevation: 3,
+                opacity: task.checked ? 0.6 : 1,
               }}
-              className="mb-3 rounded-xl p-4"
+              className="mb-4 rounded-3xl p-5 border border-gray-100 dark:border-gray-800"
             >
               {/* Header Row */}
               <View className="flex-row items-start justify-between">
-                <View className="flex-row items-start gap-3 flex-1">
+                <View className="flex-row items-start gap-4 flex-1">
                   <Checkbox
                     value={task.checked}
                     onValueChange={() => toggleTask(task.id)}
-                    color={task.checked ? '#6366F1' : undefined}
-                    style={{ marginTop: 2 }}
+                    color={task.checked ? colors.primary : undefined}
+                    style={{
+                      width: 24,
+                      height: 24,
+                      borderRadius: 8,
+                      borderColor: colors.border,
+                      marginTop: 2
+                    }}
                   />
                   <View className="flex-1">
-                    {/* Category & Title */}
-                    <View className="flex-row items-center gap-2 mb-1">
-                      <Ionicons name={getCategoryIcon(task.category)} size={14} color={colors.primary} />
-                      <Text style={{ color: colors.textSecondary }} className="text-xs">{task.category}</Text>
+                    {/* Category & Date Row */}
+                    <View className="flex-row items-center justify-between mb-2">
+                      <View className="flex-row items-center bg-gray-100 dark:bg-gray-800 px-2 py-1 rounded-md">
+                        <Ionicons name={getCategoryIcon(task.category)} size={12} color={colors.textSecondary} />
+                        {/* <Text style={{ color: colors.textSecondary }} className="text-[10px] ml-1 font-medium uppercase tracking-wider">{task.category}</Text> */}
+                      </View>
+                      <View className="flex-row items-center">
+                        <Ionicons name="calendar-clear-outline" size={12} color={colors.textSecondary} />
+                        <Text style={{ color: colors.textSecondary }} className="text-xs ml-1">{task.dueDate}</Text>
+                      </View>
                     </View>
 
                     <Text
@@ -133,106 +181,86 @@ export default function TaskListScreen() {
                         color: colors.text,
                         textDecorationLine: task.checked ? 'line-through' : 'none',
                       }}
-                      className="text-base font-semibold"
+                      className="text-lg font-bold leading-6 mb-1"
                     >
                       {task.title}
                     </Text>
 
                     {/* Description */}
                     {task.description && !task.checked && (
-                      <Text style={{ color: colors.textSecondary }} className="text-sm mt-1" numberOfLines={2}>
+                      <Text style={{ color: colors.textSecondary }} className="text-sm leading-5 mb-3" numberOfLines={2}>
                         {task.description}
                       </Text>
                     )}
 
-                    {/* Meta Info */}
-                    <View className="flex-row items-center gap-3 mt-2 flex-wrap">
-                      <View className="flex-row items-center gap-1">
-                        <Ionicons name="calendar-outline" size={12} color={colors.textSecondary} />
-                        <Text style={{ color: colors.textSecondary }} className="text-xs">{task.dueDate}</Text>
-                      </View>
-                      {task.time && (
-                        <View className="flex-row items-center gap-1">
-                          <Ionicons name="time-outline" size={12} color={colors.textSecondary} />
-                          <Text style={{ color: colors.textSecondary }} className="text-xs">{task.time}</Text>
-                        </View>
-                      )}
-                      {task.location && (
-                        <View className="flex-row items-center gap-1">
-                          <Ionicons name="location-outline" size={12} color={colors.textSecondary} />
-                          <Text style={{ color: colors.textSecondary }} className="text-xs">{task.location}</Text>
-                        </View>
-                      )}
-                    </View>
-
-                    {/* Subtasks Progress */}
+                    {/* Subtasks Bar */}
                     {task.subtasks && task.subtasks.length > 0 && !task.checked && (
-                      <View className="mt-3">
-                        <View className="flex-row items-center justify-between mb-1">
-                          <Text style={{ color: colors.textSecondary }} className="text-xs">
-                            Alt görevler: {completedSubtasks}/{totalSubtasks}
-                          </Text>
+                      <View className="mt-2 mb-3">
+                        <View className="flex-row justify-between mb-1">
+                          <Text style={{ color: colors.textSecondary }} className="text-[10px] uppercase font-bold tracking-wider">İlerleme</Text>
+                          <Text style={{ color: colors.textSecondary }} className="text-[10px] font-bold">{Math.round((completedSubtasks / totalSubtasks) * 100)}%</Text>
                         </View>
-                        <View style={{ backgroundColor: colors.border, height: 4, borderRadius: 2 }}>
+                        <View style={{ backgroundColor: colors.border, height: 6, borderRadius: 3, overflow: 'hidden' }}>
                           <View
                             style={{
                               backgroundColor: colors.primary,
                               width: `${(completedSubtasks / totalSubtasks) * 100}%`,
-                              height: 4,
-                              borderRadius: 2,
+                              height: 6,
+                              borderRadius: 3,
                             }}
                           />
                         </View>
                       </View>
                     )}
 
-                    {/* Tags */}
-                    {task.tags && task.tags.length > 0 && !task.checked && (
-                      <View className="flex-row gap-1 mt-2 flex-wrap">
-                        {task.tags.slice(0, 3).map((tag, index) => (
-                          <View
-                            key={index}
-                            style={{ backgroundColor: isDark ? '#374151' : '#F3F4F6' }}
-                            className="px-2 py-0.5 rounded"
-                          >
-                            <Text style={{ color: colors.textSecondary }} className="text-xs">#{tag}</Text>
-                          </View>
+                    {/* Footer Row: Tags and AI */}
+                    <View className="flex-row items-center justify-between mt-1">
+                      <View className="flex-row gap-2">
+                        {task.tags?.slice(0, 2).map((tag, i) => (
+                          <Text key={i} style={{ color: colors.primary }} className="text-xs font-medium">#{tag}</Text>
                         ))}
                       </View>
-                    )}
 
-                    {/* AI Suggestion */}
-                    {task.aiSuggestion && !task.checked && (
-                      <View
-                        style={{ backgroundColor: isDark ? '#1E3A5F' : '#EFF6FF', borderColor: isDark ? '#334155' : '#DBEAFE', borderWidth: 1 }}
-                        className="mt-3 p-2 rounded-lg flex-row items-center gap-2"
-                      >
-                        <Ionicons name="sparkles" size={14} color={isDark ? '#60A5FA' : '#3B82F6'} />
-                        <Text style={{ color: isDark ? '#93C5FD' : '#1D4ED8' }} className="text-xs flex-1">
-                          AI: {task.aiSuggestion}
-                        </Text>
-                      </View>
-                    )}
+                      {task.aiSuggestion && !task.checked && (
+                        <View className="flex-row items-center bg-indigo-50 dark:bg-indigo-900/30 px-2 py-1 rounded-full border border-indigo-100 dark:border-indigo-800">
+                          <Ionicons name="sparkles" size={10} color={colors.primary} />
+                          <Text style={{ color: colors.primary }} className="text-[10px] ml-1 font-bold">AI İPUCU</Text>
+                        </View>
+                      )}
+                    </View>
                   </View>
                 </View>
 
-                {/* Badges */}
-                <View className="items-end gap-1">
-                  <View style={{ backgroundColor: priorityColors.bg }} className="px-2 py-1 rounded-full">
-                    <Text style={{ color: priorityColors.text }} className="text-xs font-medium">{task.priority}</Text>
-                  </View>
-                  <View style={{ backgroundColor: statusColors.bg }} className="px-2 py-1 rounded-full">
-                    <Text style={{ color: statusColors.text }} className="text-xs">{task.status}</Text>
-                  </View>
-                </View>
+                {/* Priority Badge */}
+                <View style={{ backgroundColor: priorityColors.bg }} className="w-2 h-2 rounded-full mt-2 ml-2" />
               </View>
-            </View>
+            </Animated.View>
           );
         })}
-        <View className="h-24" />
       </ScrollView>
+
+      {/* FAB */}
+      <TouchableOpacity
+        activeOpacity={0.8}
+        style={{
+          position: 'absolute',
+          bottom: 24,
+          right: 20,
+          backgroundColor: colors.primary,
+          shadowColor: colors.primary,
+          shadowOffset: { width: 0, height: 8 },
+          shadowOpacity: 0.4,
+          shadowRadius: 16,
+          elevation: 8,
+          width: 64,
+          height: 64,
+          borderRadius: 32,
+          alignItems: 'center',
+          justifyContent: 'center'
+        }}
+      >
+        <Ionicons name="add" size={32} color="white" />
+      </TouchableOpacity>
     </View>
   );
 }
-
-

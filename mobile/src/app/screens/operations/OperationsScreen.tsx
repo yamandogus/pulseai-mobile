@@ -1,159 +1,105 @@
 import React from 'react';
 import { View, Text, ScrollView, TouchableOpacity, Dimensions } from 'react-native';
+import { useTheme, useColors } from '../../../context/ThemeContext';
 import { Ionicons } from '@expo/vector-icons';
-import { useColors } from '../../../context/ThemeContext';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
+const { width } = Dimensions.get('window');
+
 const OPERATIONS = [
-    {
-        id: '1',
-        title: 'User Management',
-        icon: 'people',
-        color: '#6366F1',
-        description: 'Manage users and roles',
-    },
-    {
-        id: '2',
-        title: 'System Health',
-        icon: 'pulse',
-        color: '#10B981',
-        description: 'Monitor server status',
-    },
-    {
-        id: '3',
-        title: 'Analytics',
-        icon: 'bar-chart',
-        color: '#F59E0B',
-        description: 'View detailed reports',
-    },
-    {
-        id: '4',
-        title: 'Audit Logs',
-        icon: 'clipboard',
-        color: '#EF4444',
-        description: 'Track system activity',
-    },
-    {
-        id: '5',
-        title: 'Settings',
-        icon: 'settings',
-        color: '#8B5CF6',
-        description: 'App configuration',
-    },
-    {
-        id: '6',
-        title: 'Support',
-        icon: 'headset',
-        color: '#EC4899',
-        description: 'Contact support team',
-    },
+    { id: '1', title: 'Kullanıcı Yönetimi', icon: 'people', color: '#6366F1' },
+    { id: '2', title: 'Sistem Durumu', icon: 'server', color: '#10B981' },
+    { id: '3', title: 'Analitik', icon: 'bar-chart', color: '#3B82F6' },
+    { id: '4', title: 'Faturalandırma', icon: 'card', color: '#F59E0B' },
+    { id: '5', title: 'Destek', icon: 'headset', color: '#EC4899' },
+    { id: '6', title: 'Ayarlar', icon: 'settings', color: '#8B5CF6' },
 ];
 
-export default function OperationsScreen({ navigation }: { navigation: any }) {
+export default function OperationsScreen() {
     const colors = useColors();
     const insets = useSafeAreaInsets();
-    const screenWidth = Dimensions.get('window').width;
-    const cardWidth = (screenWidth - 48) / 2; // 2 column grid with padding
 
     return (
-        <ScrollView
-            style={{ flex: 1, backgroundColor: colors.background }}
-            contentContainerStyle={{
-                paddingTop: insets.top + 20,
-                paddingBottom: 100,
-                paddingHorizontal: 16
-            }}
-            showsVerticalScrollIndicator={false}
-        >
-            {/* Header */}
-            <View className="mb-8">
-                <Text
-                    style={{ color: colors.text }}
-                    className="text-3xl font-bold tracking-tight"
-                >
-                    Operations
-                </Text>
-                <Text
-                    style={{ color: colors.textSecondary }}
-                    className="text-base mt-2 opacity-80"
-                >
-                    Manage your system and preferences
-                </Text>
-            </View>
-
-            {/* Grid Layout */}
-            <View className="flex-row flex-wrap justify-between">
-                {OPERATIONS.map((op) => (
-                    <TouchableOpacity
-                        key={op.id}
-                        activeOpacity={0.7}
-                        style={{
-                            width: cardWidth,
-                            backgroundColor: colors.card,
-                            shadowColor: colors.shadow,
-                            shadowOffset: { width: 0, height: 4 },
-                            shadowOpacity: 0.1,
-                            shadowRadius: 12,
-                            elevation: 4,
-                        }}
-                        className="mb-4 rounded-3xl p-5 border border-gray-100 dark:border-gray-800"
-                        onPress={() => {
-                            // Navigation placeholder
-                            // navigation.navigate(op.route);
-                        }}
-                    >
-                        <View
-                            style={{ backgroundColor: op.color + '20' }}
-                            className="w-12 h-12 rounded-full items-center justify-center mb-4"
-                        >
-                            <Ionicons name={op.icon as any} size={24} color={op.color} />
-                        </View>
-                        <Text
-                            style={{ color: colors.text }}
-                            className="text-lg font-semibold mb-1"
-                        >
-                            {op.title}
-                        </Text>
-                        <Text
-                            style={{ color: colors.textSecondary }}
-                            className="text-xs leading-5"
-                        >
-                            {op.description}
-                        </Text>
-                    </TouchableOpacity>
-                ))}
-            </View>
-
-            {/* Hero / Promo Card */}
-            <View
-                style={{
-                    backgroundColor: colors.primary,
-                    shadowColor: colors.primary,
-                    shadowOffset: { width: 0, height: 8 },
-                    shadowOpacity: 0.3,
-                    shadowRadius: 16,
-                    elevation: 8,
+        <View style={{ flex: 1, backgroundColor: colors.background }}>
+            <ScrollView
+                contentContainerStyle={{
+                    paddingTop: insets.top + 20,
+                    paddingHorizontal: 20,
+                    paddingBottom: 40
                 }}
-                className="mt-4 rounded-3xl p-6 relative overflow-hidden"
+                showsVerticalScrollIndicator={false}
             >
-                {/* Decorative Circles */}
-                <View className="absolute -top-10 -right-10 w-40 h-40 bg-white opacity-10 rounded-full" />
-                <View className="absolute bottom-[-20] left-[-20] w-32 h-32 bg-white opacity-10 rounded-full" />
+                <Text style={{ color: colors.text }} className="text-3xl font-bold mb-2">İşlemler</Text>
+                <Text style={{ color: colors.textSecondary }} className="text-base mb-8">
+                    Tüm sistem araçlarını buradan yönetebilirsiniz.
+                </Text>
 
-                <View className="flex-row items-center justify-between">
-                    <View className="flex-1 mr-4">
-                        <Text className="text-white text-xl font-bold mb-2">
-                            Upgrade Plan
-                        </Text>
-                        <Text className="text-indigo-100 text-sm">
-                            Unlock advanced operations and analytics tools.
-                        </Text>
+                {/* Hero / Promo Card */}
+                <View
+                    className="w-full h-40 rounded-3xl mb-8 p-6 justify-between overflow-hidden relative bg-indigo-600"
+                    style={{
+                        shadowColor: "#6366F1",
+                        shadowOffset: { width: 0, height: 10 },
+                        shadowOpacity: 0.3,
+                        shadowRadius: 20,
+                        elevation: 10
+                    }}
+                >
+                    {/* Decorative circles */}
+                    <View className="absolute -top-10 -right-10 w-40 h-40 rounded-full bg-white opacity-10" />
+                    <View className="absolute bottom-0 left-10 w-20 h-20 rounded-full bg-white opacity-5" />
+
+                    <View>
+                        <View className="flex-row items-center bg-white/20 px-3 py-1 rounded-full self-start backdrop-blur-md mb-2">
+                            <Ionicons name="star" size={12} color="white" />
+                            <Text className="text-white text-xs font-bold ml-1">PRO</Text>
+                        </View>
+                        <Text className="text-white text-xl font-bold">Premium'a Yükselt</Text>
+                        <Text className="text-indigo-100 text-sm mt-1">Sınırsız analiz ve AI desteği.</Text>
                     </View>
-                    <View className="bg-white/20 p-3 rounded-xl">
-                        <Ionicons name="rocket" size={24} color="white" />
-                    </View>
+
+                    <TouchableOpacity className="bg-white px-4 py-2 rounded-xl self-start">
+                        <Text className="text-indigo-600 font-bold text-sm">Planları İncele</Text>
+                    </TouchableOpacity>
                 </View>
-            </View>
-        </ScrollView>
+
+                {/* Grid Layout */}
+                <View className="flex-row flex-wrap justify-between">
+                    {OPERATIONS.map((op) => (
+                        <TouchableOpacity
+                            key={op.id}
+                            activeOpacity={0.8}
+                            style={{
+                                width: '48%',
+                                backgroundColor: colors.card,
+                                aspectRatio: 1,
+                                marginBottom: 16,
+                                shadowColor: colors.shadow,
+                                shadowOffset: { width: 0, height: 4 },
+                                shadowOpacity: 0.05,
+                                shadowRadius: 10,
+                                elevation: 3,
+                            }}
+                            className="rounded-2xl p-5 justify-between border border-gray-100 dark:border-gray-800"
+                        >
+                            <View
+                                style={{ backgroundColor: `${op.color}15` }}
+                                className="w-12 h-12 rounded-full items-center justify-center"
+                            >
+                                <Ionicons name={op.icon as any} size={24} color={op.color} />
+                            </View>
+
+                            <View>
+                                <Text style={{ color: colors.text }} className="text-base font-bold mb-1">{op.title}</Text>
+                                <View className="flex-row items-center">
+                                    <Text style={{ color: colors.textSecondary }} className="text-xs font-medium mr-1">Aç</Text>
+                                    <Ionicons name="arrow-forward" size={12} color={colors.textSecondary} />
+                                </View>
+                            </View>
+                        </TouchableOpacity>
+                    ))}
+                </View>
+            </ScrollView>
+        </View>
     );
 }

@@ -62,7 +62,7 @@ export default function ProfileScreen() {
         className="pb-8 px-6 shadow-sm mb-6"
       >
         <View className="flex-row items-center justify-between mb-6">
-          <Text style={{ color: colors.text }} className="text-2xl font-bold">Profile</Text>
+          <Text style={{ color: colors.text }} className="text-2xl font-bold">Profil</Text>
           <TouchableOpacity>
             <Ionicons name="settings-outline" size={24} color={colors.text} />
           </TouchableOpacity>
@@ -71,19 +71,18 @@ export default function ProfileScreen() {
         <View className="flex-row items-center">
           <View className="relative">
             <View className="w-20 h-20 bg-gray-200 rounded-full items-center justify-center overflow-hidden border-2 border-white dark:border-gray-700">
-              <Ionicons name="person" size={40} color="#9CA3AF" />
-              {/* <Image source={{ uri: '...' }} className="w-full h-full" /> */}
+              <Image source={{ uri: 'https://uifaces.co/our-content/donated/6MWH9Xi_.jpg' }} className="w-full h-full" />
             </View>
             <View className="absolute bottom-0 right-0 w-6 h-6 bg-indigo-500 rounded-full items-center justify-center border-2 border-white dark:border-gray-800">
               <Ionicons name="pencil" size={12} color="white" />
             </View>
           </View>
           <View className="ml-5 flex-1">
-            <Text style={{ color: colors.text }} className="text-xl font-bold">John Doe</Text>
-            <Text style={{ color: colors.textSecondary }} className="text-sm">Free Plan Member</Text>
+            <Text style={{ color: colors.text }} className="text-xl font-bold">Doğuş Yaman</Text>
+            <Text style={{ color: colors.textSecondary }} className="text-sm">Ücretsiz Üyelik</Text>
 
             <TouchableOpacity className="bg-indigo-600 px-4 py-2 rounded-lg self-start mt-3">
-              <Text className="text-white text-xs font-bold">Upgrade to Pro</Text>
+              <Text className="text-white text-xs font-bold">Premium'a Geç</Text>
             </TouchableOpacity>
           </View>
         </View>
@@ -92,17 +91,17 @@ export default function ProfileScreen() {
         <View className="flex-row justify-between mt-8 px-2">
           <View className="items-center">
             <Text style={{ color: colors.text }} className="text-xl font-bold">128</Text>
-            <Text style={{ color: colors.textSecondary }} className="text-xs">Tasks</Text>
+            <Text style={{ color: colors.textSecondary }} className="text-xs">Görev</Text>
           </View>
           <View style={{ width: 1, height: '100%', backgroundColor: colors.border }} />
           <View className="items-center">
             <Text style={{ color: colors.text }} className="text-xl font-bold">4.8</Text>
-            <Text style={{ color: colors.textSecondary }} className="text-xs">Rating</Text>
+            <Text style={{ color: colors.textSecondary }} className="text-xs">Puan</Text>
           </View>
           <View style={{ width: 1, height: '100%', backgroundColor: colors.border }} />
           <View className="items-center">
-            <Text style={{ color: colors.text }} className="text-xl font-bold">85%</Text>
-            <Text style={{ color: colors.textSecondary }} className="text-xs">Success</Text>
+            <Text style={{ color: colors.text }} className="text-xl font-bold">%85</Text>
+            <Text style={{ color: colors.textSecondary }} className="text-xs">Başarı</Text>
           </View>
         </View>
       </View>
@@ -110,13 +109,13 @@ export default function ProfileScreen() {
       {/* Settings Sections */}
       <View className="px-6">
         <Text style={{ color: colors.textSecondary }} className="text-sm font-bold uppercase mb-2 ml-1 opacity-70">
-          Preferences
+          Tercihler
         </Text>
         <View style={{ backgroundColor: colors.card, borderRadius: 16 }} className="px-4 mb-6">
           <SettingItem
             icon="moon"
-            title="Dark Mode"
-            subtitle="Adjust app appearance"
+            title="Karanlık Mod"
+            subtitle="Uygulama görünümü"
             type="switch"
             value={
               <RNSwitch
@@ -130,15 +129,15 @@ export default function ProfileScreen() {
           />
           <SettingItem
             icon="notifications"
-            title="Notifications"
-            subtitle="Manage alerts"
+            title="Bildirimler"
+            subtitle="Uyarıları yönet"
             type="arrow"
             colors={colors}
           />
           <SettingItem
             icon="globe"
-            title="Language"
-            value="English"
+            title="Dil"
+            value="Türkçe"
             type="value"
             colors={colors}
             onPress={() => { }}
@@ -146,17 +145,17 @@ export default function ProfileScreen() {
         </View>
 
         <Text style={{ color: colors.textSecondary }} className="text-sm font-bold uppercase mb-2 ml-1 opacity-70">
-          Support
+          Destek
         </Text>
         <View style={{ backgroundColor: colors.card, borderRadius: 16 }} className="px-4 mb-8">
           <SettingItem
             icon="help-buoy"
-            title="Help Center"
+            title="Yardım Merkezi"
             colors={colors}
           />
           <SettingItem
             icon="shield-checkmark"
-            title="Privacy Policy"
+            title="Gizlilik Politikası"
             colors={colors}
           />
           <TouchableOpacity
@@ -166,12 +165,12 @@ export default function ProfileScreen() {
             <View className="w-10 h-10 rounded-full bg-red-50 items-center justify-center mr-4">
               <Ionicons name="log-out" size={22} color="#EF4444" />
             </View>
-            <Text className="text-red-500 text-base font-semibold">Log Out</Text>
+            <Text className="text-red-500 text-base font-semibold">Çıkış Yap</Text>
           </TouchableOpacity>
         </View>
 
         <Text style={{ color: colors.textSecondary }} className="text-center text-xs mb-8 opacity-50">
-          Version 1.0.0 (Build 102)
+          Versiyon 1.0.0 (Derleme 102)
         </Text>
 
       </View>
