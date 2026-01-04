@@ -59,7 +59,7 @@ type AccordionProps = {
 
 export function Accordion({ open, children }: AccordionProps) {
   return (
-    <View className="w-52">
+    <View className="w-full">
       <AccordionItem isExpanded={open} viewKey="main">
         {children}
       </AccordionItem>

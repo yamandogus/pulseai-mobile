@@ -21,6 +21,30 @@ export default function PulseAiScreen() {
   const colors = useColors();
   const insets = useSafeAreaInsets();
   const [input, setInput] = useState('');
+  const [messages, setMessages] = useState(MOCK_CHAT);
+  const scrollViewRef = React.useRef<ScrollView>(null);
+
+  const sendMessage = () => {
+    if (!input.trim()) return;
+
+    const userMsg = { id: Date.now().toString(), role: 'user', text: input };
+    setMessages(prev => [...prev, userMsg]);
+    setInput('');
+    
+    // Auto scroll to bottom
+    setTimeout(() => scrollViewRef.current?.scrollToEnd({ animated: true }), 100);
+
+    // Mock AI Response
+    setTimeout(() => {
+      const aiMsg = { 
+        id: (Date.now() + 1).toString(), 
+        role: 'ai', 
+        text: 'Anlaşıldı, bu konuda sana yardımcı olabilirim. Başka bir isteğin var mı?' 
+      };
+      setMessages(prev => [...prev, aiMsg]);
+      setTimeout(() => scrollViewRef.current?.scrollToEnd({ animated: true }), 100);
+    }, 1500);
+  };
 
   return (
     <View style={{ flex: 1, backgroundColor: colors.background }}>
@@ -112,9 +136,10 @@ export default function PulseAiScreen() {
             style={{ backgroundColor: colors.card }}
           >
             <TextInput
-              placeholder="Bir şeyler yazın..."
+              placeholder="Bir şeyler yaz..."
               placeholderTextColor={colors.textSecondary}
-              style={{ color: colors.text, flex: 1, fontSize: 16 }}
+              style={{ color: colors.text, maxHeight: 100, flex: 1, fontSize: 16 }}
+              multiline
               value={input}
               onChangeText={setInput}
             />
@@ -124,6 +149,7 @@ export default function PulseAiScreen() {
           </View>
 
           <TouchableOpacity
+            onPress={sendMessage}
             style={{ backgroundColor: colors.primary }}
             className="w-12 h-12 rounded-full items-center justify-center shadow-md"
           >

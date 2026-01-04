@@ -10,6 +10,8 @@ export type Task = {
     id: string;
     title: string;
     description?: string;
+    date?: string;
+    image?: string;
     priority: 'Yüksek' | 'Orta' | 'Düşük';
     status: 'Beklemede' | 'Devam Ediyor' | 'Tamamlandı';
     category: 'Toplantı' | 'Geliştirme' | 'Tasarım' | 'Rapor' | 'Planlama' | 'İletişim' | 'Test' | 'Diğer';
@@ -22,6 +24,8 @@ export type Task = {
     progress?: number;
     aiSuggestion?: string;
     checked: boolean;
+    notificationEnabled?: boolean;
+    calendarEnabled?: boolean;
 };
 
 // Kategori ikonları

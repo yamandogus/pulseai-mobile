@@ -1,4 +1,4 @@
-import { View, Text, TextInput, TouchableOpacity, ScrollView, Platform } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, ScrollView } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import Animated, {
   useAnimatedStyle,
@@ -8,18 +8,24 @@ import Animated, {
   FadeInDown
 } from 'react-native-reanimated';
 import { useTheme, useColors } from '../../../context/ThemeContext';
-import Checkbox from 'expo-checkbox';
 import { useState } from 'react';
-import { dummyTasks, getPriorityColor, getCategoryIcon } from './task';
+import { getPriorityColor, getCategoryIcon } from './task';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import Checkbox from 'expo-checkbox';
+import { useNavigation } from '@react-navigation/native';
+import { useTaskStore } from '@/store/task/task.store';
 
 export default function TaskListScreen() {
   const searchOpen = useSharedValue(0);
   const { isDark } = useTheme();
   const colors = useColors();
   const insets = useSafeAreaInsets();
-  const [tasks, setTasks] = useState(dummyTasks);
+  
+  const tasks = useTaskStore((state) => state.tasks);
+  const toggleTask = useTaskStore((state) => state.toggleTask);
+  
   const [filter, setFilter] = useState<'Tümü' | 'Aktif' | 'Tamamlandı'>('Tümü');
+  const navigation = useNavigation();
 
   const animatedHeight = useDerivedValue(() =>
     withTiming(searchOpen.value ? 60 : 0, { duration: 300 })
@@ -30,12 +36,6 @@ export default function TaskListScreen() {
     opacity: searchOpen.value ? 1 : 0,
     marginBottom: searchOpen.value ? 16 : 0,
   }));
-
-  const toggleTask = (id: string) => {
-    setTasks(prev => prev.map(task =>
-      task.id === id ? { ...task, checked: !task.checked, status: !task.checked ? 'Tamamlandı' : 'Beklemede' } : task
-    ));
-  };
 
   const filteredTasks = tasks.filter(task => {
     if (filter === 'Aktif') return !task.checked;
@@ -242,6 +242,7 @@ export default function TaskListScreen() {
       {/* FAB */}
       <TouchableOpacity
         activeOpacity={0.8}
+        onPress={() => navigation.navigate('CreateTask' as never)}
         style={{
           position: 'absolute',
           bottom: 24,

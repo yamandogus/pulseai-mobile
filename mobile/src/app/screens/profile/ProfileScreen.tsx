@@ -1,11 +1,14 @@
-import React, { useEffect } from 'react';
-import { View, Text, ScrollView, TouchableOpacity, Image, Switch as RNSwitch } from 'react-native';
+import React, { useState } from 'react';
+import { View, Text, ScrollView, TouchableOpacity, Image } from 'react-native';
 import { useTheme, useColors } from '@/context/ThemeContext';
 import { Ionicons } from '@expo/vector-icons';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useNavigation } from '@react-navigation/native';
+import { useAuthStore } from '@/store/auth/auth.store';
+import Switch from '@/components/ui/Switch';
+import BottomSheet from '@/components/ui/BottomSheet';
+import { useSharedValue } from 'react-native-reanimated';
 
-// Custom Setting Item Component
 const SettingItem = ({ icon, title, subtitle, value, onPress, type = 'arrow', colors }: any) => (
   <TouchableOpacity
     activeOpacity={0.7}
@@ -47,13 +50,17 @@ export default function ProfileScreen() {
   const { isDark, toggleTheme } = useTheme();
   const colors = useColors();
   const insets = useSafeAreaInsets();
-  const navigation = useNavigation()
+  const navigation = useNavigation();
+  const logout = useAuthStore((state) => state.logout);
+  const themeSwitch = useSharedValue(isDark);
+  const notificationSwitch = useSharedValue(true);
+  const languageSheetOpen = useSharedValue(false);
+  const [selectedLanguage, setSelectedLanguage] = useState<'tr' | 'en'>('tr');
 
   return (
     <ScrollView
       style={{ flex: 1, backgroundColor: colors.background }}
       contentContainerStyle={{ paddingBottom: 100 }}>
-      {/* Header / Profile Card */}
       <View
         style={{
           backgroundColor: colors.card,
@@ -128,7 +135,6 @@ export default function ProfileScreen() {
         </View>
       </View>
 
-      {/* Settings Sections */}
       <View className="px-6">
         <Text
           style={{ color: colors.textSecondary }}
@@ -141,13 +147,19 @@ export default function ProfileScreen() {
             title="Karanlık Mod"
             subtitle="Uygulama görünümü"
             type="switch"
-            onPress={() => toggleTheme()}
+            onPress={() => {
+              themeSwitch.value = !themeSwitch.value;
+              toggleTheme();
+            }}
             value={
-              <RNSwitch
-                value={isDark}
-                onValueChange={() => toggleTheme()}
-                trackColor={{ false: '#E5E7EB', true: '#6366F1' }}
-                thumbColor={'#FFFFFF'}
+              <Switch
+                value={themeSwitch}
+                onPress={() => {
+                  themeSwitch.value = !themeSwitch.value;
+                  toggleTheme();
+                }}
+                trackColors={{ on: '#6366F1', off: '#E5E7EB' }}
+                style={{ width: 60, height: 30 }}
               />
             }
             colors={colors}
@@ -156,16 +168,31 @@ export default function ProfileScreen() {
             icon="notifications"
             title="Bildirimler"
             subtitle="Uyarıları yönet"
-            type="arrow"
+            type="switch"
+            onPress={() => {
+              notificationSwitch.value = !notificationSwitch.value;
+            }}
+            value={
+              <Switch
+                value={notificationSwitch}
+                onPress={() => {
+                  notificationSwitch.value = !notificationSwitch.value;
+                }}
+                trackColors={{ on: '#22C55E', off: '#E5E7EB' }}
+                style={{ width: 60, height: 30 }}
+              />
+            }
             colors={colors}
           />
           <SettingItem
             icon="globe"
             title="Dil"
-            value="Türkçe"
+            value={selectedLanguage === 'tr' ? 'Türkçe' : 'English'}
             type="value"
             colors={colors}
-            onPress={() => {}}
+            onPress={() => {
+              languageSheetOpen.value = true;
+            }}
           />
         </View>
 
@@ -175,15 +202,21 @@ export default function ProfileScreen() {
           Destek
         </Text>
         <View style={{ backgroundColor: colors.card, borderRadius: 16 }} className="mb-8 px-4">
-          <SettingItem icon="help-buoy" title="Yardım Merkezi" colors={colors} />
-          <SettingItem icon="shield-checkmark" title="Gizlilik Politikası" colors={colors} />
+          <SettingItem
+            icon="help-buoy"
+            title="Yardım Merkezi"
+            colors={colors}
+            onPress={() => navigation.navigate('HelpCenter' as never)}
+          />
+          <SettingItem
+            icon="shield-checkmark"
+            title="Gizlilik Politikası"
+            colors={colors}
+            onPress={() => navigation.navigate('PrivacyPolicy' as never)}
+          />
           <TouchableOpacity
             className="flex-row items-center py-4"
-            onPress={() =>
-              navigation.navigate('Auth', {
-                screen: 'Register',
-              })
-            }>
+            onPress={() => logout()}>
             <View className="mr-4 h-10 w-10 items-center justify-center rounded-full bg-red-50">
               <Ionicons name="log-out" size={22} color="#EF4444" />
             </View>
@@ -197,6 +230,41 @@ export default function ProfileScreen() {
           Versiyon 1.0.0 (Derleme 102)
         </Text>
       </View>
+
+      <BottomSheet
+        isOpen={languageSheetOpen}
+        toggleSheet={() => {
+          languageSheetOpen.value = !languageSheetOpen.value;
+        }}
+        headerTitle="Dil Seçimi"
+        buttonText="Kaydet"
+        onButtonPress={() => {
+          languageSheetOpen.value = false;
+        }}
+      >
+        <TouchableOpacity
+          className="flex-row items-center justify-between py-3"
+          onPress={() => setSelectedLanguage('tr')}
+        >
+          <Text style={{ color: colors.text }} className="text-base">
+            Türkçe
+          </Text>
+          {selectedLanguage === 'tr' && (
+            <Ionicons name="checkmark-circle" size={20} color={colors.primary} />
+          )}
+        </TouchableOpacity>
+        <TouchableOpacity
+          className="flex-row items-center justify-between py-3"
+          onPress={() => setSelectedLanguage('en')}
+        >
+          <Text style={{ color: colors.text }} className="text-base">
+            English
+          </Text>
+          {selectedLanguage === 'en' && (
+            <Ionicons name="checkmark-circle" size={20} color={colors.primary} />
+          )}
+        </TouchableOpacity>
+      </BottomSheet>
     </ScrollView>
   );
 }

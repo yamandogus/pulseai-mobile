@@ -3,6 +3,7 @@ import { View, Text, TextInput, TouchableOpacity, KeyboardAvoidingView, Platform
 import { Ionicons } from '@expo/vector-icons';
 import { useColors } from '../../../context/ThemeContext';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { useAuthStore } from '@/store/auth/auth.store';
 
 export default function LoginScreen({ navigation }: { navigation: any }) {
   const colors = useColors();
@@ -10,6 +11,18 @@ export default function LoginScreen({ navigation }: { navigation: any }) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [secureTextEntry, setSecureTextEntry] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  const login = useAuthStore((state) => state.login);
+
+  const handleLogin = () => {
+    if (!email || !password) {
+      setError('E-posta ve şifre zorunlu');
+      return;
+    }
+
+    setError(null);
+    login('demo-auth-token');
+  };
 
   return (
     <KeyboardAvoidingView
@@ -58,7 +71,6 @@ export default function LoginScreen({ navigation }: { navigation: any }) {
               </View>
             </View>
 
-            {/* Password Input */}
             <View>
               <Text style={{ color: colors.text }} className="text-sm font-medium mb-2 ml-1">
                 Password
@@ -86,6 +98,12 @@ export default function LoginScreen({ navigation }: { navigation: any }) {
               </View>
             </View>
 
+            {error && (
+              <Text style={{ color: '#EF4444' }} className="text-sm mt-1 ml-1">
+                {error}
+              </Text>
+            )}
+
             {/* Forgot Password */}
             <TouchableOpacity className="items-end">
               <Text className="text-indigo-500 font-medium text-sm">
@@ -97,12 +115,7 @@ export default function LoginScreen({ navigation }: { navigation: any }) {
             <TouchableOpacity
               activeOpacity={0.8}
               className="bg-indigo-600 h-14 rounded-2xl items-center justify-center shadow-lg shadow-indigo-500/30 mt-4"
-              onPress={() => {
-                // TODO: Implement Auth Logic
-                // For now navigation to MainTabs is handled by the root navigator if not authenticated, 
-                // but assuming this is part of the flow:
-                console.log("Sign In Pressed");
-              }}
+              onPress={handleLogin}
             >
               <Text className="text-white font-bold text-lg">
                 Sign In
