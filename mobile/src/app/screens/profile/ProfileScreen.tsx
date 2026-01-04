@@ -54,7 +54,7 @@ export default function ProfileScreen() {
   const logout = useAuthStore((state) => state.logout);
   const themeSwitch = useSharedValue(isDark);
   const notificationSwitch = useSharedValue(true);
-  const languageSheetOpen = useSharedValue(false);
+  const [languageSheetOpen, setLanguageSheetOpen] = useState(false);
   const [selectedLanguage, setSelectedLanguage] = useState<'tr' | 'en'>('tr');
 
   return (
@@ -191,7 +191,7 @@ export default function ProfileScreen() {
             type="value"
             colors={colors}
             onPress={() => {
-              languageSheetOpen.value = true;
+              setLanguageSheetOpen(true);
             }}
           />
         </View>
@@ -234,12 +234,12 @@ export default function ProfileScreen() {
       <BottomSheet
         isOpen={languageSheetOpen}
         toggleSheet={() => {
-          languageSheetOpen.value = !languageSheetOpen.value;
+          setLanguageSheetOpen(!languageSheetOpen);
         }}
         headerTitle="Dil Seçimi"
         buttonText="Kaydet"
         onButtonPress={() => {
-          languageSheetOpen.value = false;
+          setLanguageSheetOpen(false);
         }}
       >
         <TouchableOpacity

@@ -2,10 +2,21 @@ import { View, Text, TouchableOpacity } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useColors, useTheme } from '@/context/ThemeContext';
+import { useState } from 'react';
+import UpdateSheet from './UpdateSheet';
 
 export default function PulseAiSuggestions() {
   const colors = useColors();
   const { isDark } = useTheme();
+  const [isSheetOpen, setIsSheetOpen] = useState(false);
+  const [selectedOption, setSelectedOption] = useState<string | null>(null);
+
+  const options = [
+    { id: '1h', label: '1 Saat Sonra', emoji: '⏰', time: new Date(Date.now() + 60 * 60 * 1000).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) },
+    { id: 'evening', label: 'Bu Akşam', emoji: '🌙', time: '20:00' },
+    { id: 'tomorrow', label: 'Yarın Sabah', emoji: '🌅', time: '09:00' },
+    { id: 'weekend', label: 'Haftasonu', emoji: '🌴', time: 'Cmt 10:00' },
+  ];
 
   return (
     <View className="mb-6">
@@ -63,6 +74,9 @@ export default function PulseAiSuggestions() {
           <View className="flex-row gap-3">
             <TouchableOpacity
               activeOpacity={0.9}
+              onPress={() => {
+                setIsSheetOpen(true);
+              }}
               style={{ backgroundColor: isDark ? 'white' : colors.primary }}
               className="flex-1 items-center rounded-xl px-5 py-3 shadow-sm">
               <Text
@@ -88,6 +102,68 @@ export default function PulseAiSuggestions() {
           </View>
         </LinearGradient>
       </View>
+      <UpdateSheet
+        isOpen={isSheetOpen}
+        toggleSheet={() => {
+          setIsSheetOpen(!isSheetOpen);
+        }}
+        headerTitle="Görevi Ertele"
+        buttonText="Güncelle"
+        onButtonPress={() => {
+          setIsSheetOpen(false);
+          setSelectedOption(null);
+        }}>
+        <View className="w-full">
+          <Text style={{ color: colors.textSecondary }} className="text-sm mb-4 text-center">
+            Ertelemek istediğiniz zamanı seçiniz
+          </Text>
+          
+          <View className="flex-row flex-wrap gap-3 justify-between">
+            {options.map((option) => (
+              <TouchableOpacity
+                key={option.id}
+                onPress={() => setSelectedOption(option.id)}
+                style={{
+                  backgroundColor: selectedOption === option.id ? colors.primary + '20' : colors.card,
+                  borderColor: selectedOption === option.id ? colors.primary : colors.border,
+                  borderWidth: 1,
+                  width: '48%',
+                }}
+                className="p-4 rounded-xl items-center justify-center mb-2"
+              >
+                <Text style={{ fontSize: 24, marginBottom: 8 }}>{option.emoji}</Text>
+                <Text 
+                  style={{ 
+                    color: selectedOption === option.id ? colors.primary : colors.text,
+                    fontWeight: selectedOption === option.id ? '700' : '500'
+                  }}
+                  className="text-sm mb-1"
+                >
+                  {option.label}
+                </Text>
+                <Text style={{ color: colors.textSecondary, fontSize: 12 }}>{option.time}</Text>
+              </TouchableOpacity>
+            ))}
+          </View>
+
+          <TouchableOpacity
+            style={{ 
+              marginTop: 8,
+              padding: 16,
+              borderRadius: 12,
+              backgroundColor: colors.card,
+              borderWidth: 1,
+              borderColor: colors.border,
+              flexDirection: 'row',
+              alignItems: 'center',
+              justifyContent: 'center'
+            }}
+          >
+             <Ionicons name="calendar" size={20} color={colors.textSecondary} style={{ marginRight: 8 }} />
+             <Text style={{ color: colors.text }}>Farklı bir tarih seç...</Text>
+          </TouchableOpacity>
+        </View>
+      </UpdateSheet>
     </View>
   );
 }

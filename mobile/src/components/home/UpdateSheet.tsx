@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Text, View, TouchableOpacity, Modal, StyleSheet } from 'react-native';
+import { Text, View, TouchableOpacity, Modal } from 'react-native';
 import Animated, {
   useAnimatedStyle,
   withTiming,
@@ -17,13 +17,13 @@ type BottomSheetProps = {
   onButtonPress?: () => void;
 };
 
-export default function BottomSheet({
+export default function UpdateSheet({
   isOpen,
   toggleSheet,
   duration = 300,
   children,
   headerTitle,
-  buttonText,
+  buttonText = "Ertele",
   onButtonPress,
 }: BottomSheetProps) {
   const [isVisible, setIsVisible] = useState(false);
@@ -95,7 +95,7 @@ export default function BottomSheet({
           <View className="mb-6 w-full">{children}</View>
 
           {/* DYNAMIC ACTION BUTTON */}
-          {buttonText && (
+          {onButtonPress && (
             <View className="w-full mb-8">
               <TouchableOpacity
                 onPress={onButtonPress}
@@ -107,6 +107,7 @@ export default function BottomSheet({
               </TouchableOpacity>
             </View>
           )}
+       
         </Animated.View>
       </View>
     </Modal>
